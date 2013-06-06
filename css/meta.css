@@ -4,6 +4,10 @@ html, body {
 	overflow: hidden;
 }
 
+#wrapper{
+	display: none;
+}
+
 .container{
 	top: 41px;
 	bottom: 0px;

@@ -2,17 +2,6 @@ var oh = oh || {};
 oh.utils = oh.utils || {};
 oh.user = oh.user || {};
 
-oh.utils.getRandomSubarray = function(arr, size) {
-    var shuffled = arr.slice(0), i = arr.length, temp, index;
-    while (i--) {
-        index = Math.floor(i * Math.random());
-        temp = shuffled[index];
-        shuffled[index] = shuffled[i];
-        shuffled[i] = temp;
-    }
-    return shuffled.slice(0, size);
-}
-
 oh.utils.delayexec = function(){
 	var timer;
 	function exec(call, delay){
@@ -187,32 +176,6 @@ oh.campaign_read = function(cb){
 	return req;
 };
 
-
-oh.utils.parsecsv = function(string){
-	//dependency on d3!
-	var rows = d3.csv.parse(string);
-	
-	//parse rows
-	var records = [];
-	rows.forEach(function(d, i) {
-		//temp hack for the csv bug
-//		if(! d["Holiday:label"] && /Halloween|Christmas/i.test(d["Holiday:label"])) {
-//			dashboard.message("skipping invalid record")
-//			dashboard.message(d)
-//			return;
-//		}
-			
-		//don't skip ND/SKP records for now. NA support in crossfilter is really bad.
-		if(d[dashboard.config.item_main] == "NOT_DISPLAYED") return;
-		
-		d.hash = murmurhash3_32_gc(JSON.stringify(d));
-		records.push(d);
-	});
-	
-	//load into gui
-	return records;
-}
-
 oh.user.whoami = function(cb){
 	var req = oh.call("/user/whoami", {}, function(res){
 		if(!cb) return;
@@ -236,68 +199,3 @@ oh.keepactive = _.once(function(t){
 		oh.ping();
 	});
 });
-
-
-oh.getimageurl = function(record){	
-	var photo = dashboard.config.photo.item;
-	
-	//skip empty images
-	if(!record[photo] || record[photo] == "SKIPPED" || record[photo] == "NOT_DISPLAYED"){
-		return "images/nophoto.jpg"
-	} 		
-
-	//render url
-	var thumbtemplate = dashboard.config.photo.image || oh.utils.error("No dashboard.config.photo.image specified");
-	return Mustache.render(thumbtemplate, record);
-}	
-
-//this is the function initiated by Mustache that starts the ohmage events.
-//the function gets the CSV for a given campaign_urn OR redirects to a page to select a campaign_urn.
-
-//The async stuff is a bit of a temporary hack because ohmage is poorly implemented to return http 200
-//when the csv download fails. So we do some additional calls to detect this.
-oh.getcsvurl = function(){
-	
-	//some statics
-	var filter = dashboard.config.data.filter || ".";
-	var pattern = new RegExp(filter, "i");	
-	var campaign_urn = oh.utils.state()[0];	
-	
-	//if the current campaign is invalid, pick a new one
-	if(!campaign_urn || !pattern.test(campaign_urn)){
-		window.location = "choosecampaign.html?filter=" + filter;
-		oh.utils.error("Invalid campaign. Redirecting page.");
-	}	
-	
-	//else continue
-	var params = {
-	    campaign_urn: campaign_urn,
-	    client: "dashboard",
-	    user_list: "urn:ohmage:special:all",
-	    prompt_id_list: "urn:ohmage:special:all",
-	    output_format: "csv",
-	    sort_oder: "timestamp",
-	    column_list: "" + [
-	        "urn:ohmage:context:timestamp",
-	        "urn:ohmage:prompt:response",
-	        "urn:ohmage:context:location:latitude",
-	        "urn:ohmage:context:location:longitude"
-	    ],
-	    suppress_metadata: "true"
-	};	
-
-	//the following happens async (unfortunately)
-	//checks if we are logged in and if we have access to the campaign.
-	oh.user.whoami(function(){
-		oh.campaign_read(function(campaigns){
-			//from here we can assume we are authenticated to ohmage.
-			if($.inArray(campaign_urn, campaigns) < 0){
-				alert("No such campaign: " + campaign_urn); 
-				window.location = "choosecampaign.html?filter=" + filter;
-			}
-		});
-	});
-	
-	//return to Mustache
-	return decodeURIComponent("/app/survey_response/read?" + jQuery.param(params));
-} 
