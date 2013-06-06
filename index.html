@@ -15,51 +15,48 @@
 
 <script type="text/javascript">
 $(function() {
-	oh.user.whoami(function(name){
-		$("#username").text(name);
-		$("#wrapper").show(1000);
-		
-	});
-	$("#logoutlink").on("click", function(){
-		oh.logout(function(){
-			location.reload(true);
-		});
-	});
-	oh.keepalive();
+  oh.user.whoami(function(name){
+    $("#username").text(name);
+    $("#wrapper").show(1000);
+    
+  });
+  $("#logoutlink").on("click", function(){
+    oh.logout(function(){
+      location.reload(true);
+    });
+  });
+  oh.keepalive();
 });
 </script>
 
 </head>
 
 <body>
-	<div id="wrapper">
-		<div class="navbar navbar-inverse navbar-fixed-top navbar-small">
-			<div class="navbar-inner">
-				<div class="container-fluid">
-					<a class="brand" href="http://ohmage.org/" target="meta_iframe">Ohmage</a>
-					<div class="nav-collapse collapse">
-						<p class="navbar-text pull-right">
-							<a href="#" class="navbar-link" id="logoutlink">Logout <span
-								id="username">x</span></a>
-						</p>
-						<ul class="nav">
-							<li class="active"><a href="meta_home.html"
-								target="meta_iframe">Home</a></li>
-							<li><a href="/web" target="meta_iframe">GTW admin</a></li>
-							<li><a href="/survey" target="meta_iframe">MWF Survey</a></li>
-							<li><a href="/snack" target="meta_iframe">Snack</a></li>
-							<li><a href="/Trialist" target="meta_iframe">Trialist</a></li>
-						</ul>
-					</div>
-					<!--/.nav-collapse -->
-				</div>
-			</div>
-		</div>
+  <div id="wrapper">
+    <div class="navbar navbar-inverse navbar-fixed-top navbar-small">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="http://ohmage.org/" target="meta_iframe">Ohmage</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <a href="#" class="navbar-link" id="logoutlink">Logout <span id="username">x</span></a>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="meta_home.html"  target="meta_iframe">Home</a></li>
+              <li><a href="/web" target="meta_iframe">GTW admin</a></li>
+              <li><a href="/survey" target="meta_iframe">MWF Survey</a></li>
+              <li><a href="/snack" target="meta_iframe">Snack</a></li>
+              <li><a href="/Trialist" target="meta_iframe">Trialist</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<div class="container">
-			<iframe src="meta_home.html" name="meta_iframe"> </iframe>
-		</div>
-	</div>
+    <div class="container">
+      <iframe src="meta_home.html" name="meta_iframe"> </iframe>
+    </div>
+  </div>
 
 </body>
 </html>
