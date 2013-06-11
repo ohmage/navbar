@@ -19,8 +19,10 @@ $(function() {
     $("#username").text(name);
     if(window.location.search){
       $("iframe").attr("src", decodeURIComponent(window.location.search.substr(1)));
+      $("#wrapper").show();
+    } else {
+      window.location.search = "home.html";
     }
-    $("#wrapper").show(1000);
   });
   $("#logoutlink").on("click", function(){
     oh.logout(function(){
@@ -44,7 +46,7 @@ $(function() {
               <a href="#" class="navbar-link" id="logoutlink">Logout <span id="username">x</span></a>
             </p>
             <ul class="nav">
-              <li class="active"><a href="?meta_home.html">Home</a></li>
+              <li class="active"><a href="?home.html">Home</a></li>
               <li><a href="?%2Fweb">GTW admin</a></li>
               <li><a href="?%2Fsurvey">MWF Survey</a></li>
               <li><a href="?%2Fapp%2FEasyPost.html">EasyPost</a></li>
@@ -58,7 +60,7 @@ $(function() {
     </div>
 
     <div class="container">
-      <iframe src="meta_home.html" name="meta_iframe"> </iframe>
+      <iframe name="meta_iframe"> </iframe>
     </div>
   </div>
 
